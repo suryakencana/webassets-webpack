@@ -58,18 +58,14 @@ class Webpack(ExternalTool):
         self.temp_file = NamedTemporaryFile(suffix='.js', delete=False)
         self.temp_file.close()  # close it so windows can read it
 
-        print(kw)
         # create temp file
         args = [self.binary or 'webpack']
         args.extend(['--config', self.config or './webpack.config.js'])
 
-        self.path = kw['output_path'].split('/')
-        self.path = self.path.pop(-1)
-        # self.path = '/'.join(self.path)
-        
-        _tmp = self.temp_file.name.split('/')
-        tmp_filename = _tmp.pop(-1)
-        _tmp = '/'.join(_tmp)
+        self.path = os.path.basename(kw['output_path'])
+
+        _tmp = os.path.dirname(self.temp_file.name)
+        tmp_filename = os.path.basename(self.temp_file.name)
 
         args.extend(['--output-path', _tmp])
         args.extend(['--output-filename', tmp_filename])
